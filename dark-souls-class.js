@@ -42,7 +42,10 @@ class Character {
         this._stats = stats;
     }
 
-    // setters => change (mutate) properties, with validation
+    /**
+     * Setter for updating this._stats, which is accessible through Character.stats
+     * @param {object} newStats
+     */
     set stats(newStats) {
         if (Object.keys(newStats).length < 1) {
             throw new Error('Please specify at least 1 stat');
@@ -58,7 +61,10 @@ class Character {
         };
     }
 
-    // getters => access properties
+    /**
+     * Getter for accessing this._stats
+     * @returns {*}
+     */
     get stats() {
         return this._stats;
     }
@@ -76,7 +82,6 @@ class Character {
 
     }
 }
-
 
 class Warrior extends Character {
     constructor(name, sex, gift, physique) {
@@ -139,6 +144,8 @@ class Knight extends Character {
         };
     }
 }
+
+console.log(new Knight().stats);
 
 // TODO: refactor rest of classes
 class Wanderer extends Character {
