@@ -140,6 +140,7 @@ class Knight extends Character {
     }
 }
 
+// TODO: refactor rest of classes
 class Wanderer extends Character {
     constructor(name, sex, gift, physique, stats, inventory){
         super(name, sex, gift, physique, stats, inventory);
