@@ -5,33 +5,64 @@ const readline = require('readline');
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
-  });
+});
+
+class Inventory {
+    constructor(_items = []) {
+        this.items = _items;
+    }
+
+    /**
+     * Add items to the inventory
+     * @param {array} items
+     * @returns {*[]}
+     */
+    addItems(items) {
+        this.items = this.items.concat(items);
+        return this.items;
+    }
+
+    /**
+     * Remove an item from the inventory
+     * @param {string} name
+     */
+    removeItem(name) {
+        this.items = this.items.filter(item => item.name !== name);
+        return this.items;
+    }
+}
 
 class Character {
-    constructor(name, sex, gift, physique, stats, inventory) {
+    constructor(name, sex, gift, physique, stats, inventory = new Inventory()) {
         this.name = name;
         this.sex = sex;
         this.gift = gift;
         this.physique = physique;
-        this.inventory = {
-                        'weapon': null,
-                        'shield': null,
-                        'magic': null,
-                        'other': null
-                        }
-        this.stats = [ 
-                    'level', 
-                    'vitality',
-                    'attunement', 
-                    'endurance', 
-                    'strength', 
-                    'dexterity', 
-                    'resistance', 
-                    'intellegence', 
-                    'faith'
-                    ] 
- 
+        this.inventory = inventory;
+        this._stats = stats;
     }
+
+    // setters => change (mutate) properties, with validation
+    set stats(newStats) {
+        if (Object.keys(newStats).length < 1) {
+            throw new Error('Please specify at least 1 stat');
+        } else if (!Object.values(newStats).every(stat => typeof stat === 'number')) {
+            throw new Error('All stat values must be type number');
+        }
+
+        // We need to access _stats with an underscore
+        // to prevent an infinite loop
+        this._stats = {
+            ...this._stats, // any existing keys of newStats that exist in this._stats will be overwritten
+            ...newStats,   // docs: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+        };
+    }
+
+    // getters => access properties
+    get stats() {
+        return this._stats;
+    }
+
     move() {
 
     }
@@ -48,26 +79,64 @@ class Character {
 
 
 class Warrior extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [4, 11, 8, 12, 13, 13, 11, 9, 9]
-        .forEach((val, i) => {
-            this[this.stats[i]] = val;
-            this.inventory.weapon = 'Longsword';
-            this.inventory.shield = 'Heater Shield';
-        }); 
+    constructor(name, sex, gift, physique) {
+        super(name, sex, gift, physique);
+
+        // Add initial inventory items.
+        this.inventory.addItems([
+            {
+                name: 'Longsword',
+                description: 'Widely-used standard straight sword, only matched in ubiquity by the shortsword.',
+            },
+            {
+                name: 'Heater Shield',
+                description: 'Small metal shield. A standard, widely-used shield.',
+            }
+        ]);
+
+        // Set initial stats using setter.
+        this.stats = {
+            level: 4,
+            vitality: 11,
+            attunement: 8,
+            endurance: 12,
+            strength: 13,
+            dexterity: 13,
+            resistance: 11,
+            intelligence: 9,
+            faith: 9,
+        };
     }
 }
 
 class Knight extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [5, 14, 10, 10, 11, 11, 10, 9, 11]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Browdsword';
-        this.inventory.shield = 'Tower Kite Shield';
-        }); 
+    constructor(name, sex, gift, physique) {
+        super(name, sex, gift, physique);
+
+        // Add initial inventory items.
+        this.inventory.addItems([
+            {
+                name: 'Broadsword',
+                description: 'A straight sword with a broad blade designed for slashing.',
+            },
+            {
+                name: 'Tower Kite Shield',
+                description: 'Medium metal shield. Decorated with a tower, the symbol of protection. A standard, widely-used shield.',
+            }
+        ]);
+
+        // Set initial stats using setter.
+        this.stats = {
+            level: 5,
+            vitality: 14,
+            attunement: 10,
+            endurance: 10,
+            strength: 11,
+            dexterity: 11,
+            resistance: 10,
+            intelligence: 9,
+            faith: 11,
+        };
     }
 }
 
