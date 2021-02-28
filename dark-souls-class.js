@@ -1,12 +1,3 @@
-let log = console.log
-
-const { rawListeners } = require('process');
-const readline = require('readline');
-const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-});
-
 class Inventory {
     constructor(_items = []) {
         this.items = _items;
@@ -33,7 +24,7 @@ class Inventory {
 }
 
 class Character {
-    constructor(name, sex, gift, physique, stats, inventory = new Inventory()) {
+    constructor(name, sex, gift, physique, stats = {}, inventory = new Inventory()) {
         this.name = name;
         this.sex = sex;
         this.gift = gift;
@@ -53,6 +44,10 @@ class Character {
             throw new Error('All stat values must be type number');
         }
 
+        for (let key in newStats) {
+            this[key] = newStats[key]; // sets each stat on the character individually
+        }
+
         // We need to access _stats with an underscore
         // to prevent an infinite loop
         this._stats = {
@@ -67,19 +62,6 @@ class Character {
      */
     get stats() {
         return this._stats;
-    }
-
-    move() {
-
-    }
-    lightAttack() {
-
-    }
-    strongAttack() {
-
-    }
-    select() {
-
     }
 }
 
@@ -114,6 +96,45 @@ class Warrior extends Character {
     }
 }
 
+const warrior = new Warrior('Q', 'Male', 'Twin Humanities', 'Thin');
+
+console.log(warrior.level);
+// Initial stats, unique to Warrior class:
+// {
+//     level: 4,
+//     vitality: 11,
+//     attunement: 8,
+//     endurance: 12,
+//     strength: 13,
+//     dexterity: 13,
+//     resistance: 11,
+//     intelligence: 9,
+//     faith: 9
+// }
+
+// We only need to update the stats that are necessary
+const newWarriorStats = {
+    level: 10,
+}
+
+// Setter, not obvious that this is a function, therefore
+// hiding implementation details from the consumer
+warrior.stats = newWarriorStats;
+
+console.log(warrior.stats);
+// Updated stats, only level has changed:
+// {
+//     level: 10,
+//     vitality: 11,
+//     attunement: 8,
+//     endurance: 12,
+//     strength: 13,
+//     dexterity: 13,
+//     resistance: 11,
+//     intelligence: 9,
+//     faith: 9
+// }
+
 class Knight extends Character {
     constructor(name, sex, gift, physique) {
         super(name, sex, gift, physique);
@@ -145,159 +166,41 @@ class Knight extends Character {
     }
 }
 
-console.log(new Knight().stats);
+const knight = new Knight('Q', 'Male', 'Twin Humanities', 'Thin');
 
-// TODO: refactor rest of classes
-class Wanderer extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [3, 10, 11, 10, 10, 14, 12, 11, 8]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Scimitar';
-        this.inventory.shield = 'Leather Shield';
-        }); 
-    }
+console.log(knight.stats);
+// Initial stats, unique to Knight:
+// {
+//     level: 5,
+//     vitality: 14,
+//     attunement: 10,
+//     endurance: 10,
+//     strength: 11,
+//     dexterity: 11,
+//     resistance: 10,
+//     intelligence: 9,
+//     faith: 11
+// }
+
+// We only need to update the stats that are necessary
+const newKnightStats = {
+    level: 9,
 }
 
-class Thief extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [5, 9, 11, 9, 9, 15, 10, 12, 11]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Bandit\'s Knife';
-        this.inventory.shield ='Target Shield';
-        }); 
-    }
-}
+// Setter, not obvious that this is a function, therefore
+// hiding implementation details from the consumer
+knight.stats = newKnightStats;
 
-class Bandit extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [4, 12, 8, 14, 14, 9, 11, 8, 10]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Battle Axe';
-        this.inventory.shield = 'Spider Shield';
-        }); 
-    }
-}
-
-class Hunter extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [4, 11, 9, 11, 12, 14, 11, 9, 9]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Shortsword, Short Bow';
-        this.inventory.shield = 'Large Leather Shield';
-        this.inventory.other = 'Standard Arrow x30';
-        }); 
-    }
-}
-
-class Sorcerer extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [3, 8, 15, 8, 9, 11, 8, 15, 8]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Dagger';
-        this.inventory.shield = 'Small Leather Shield';
-        this.inventory.magic = 'Scorcerer\'s Catylist';
-        this.inventory.other = 'Soul Arrow';
-        }); 
-    }
-}
-
-class Pyromancer extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [1, 10, 12, 11, 12, 9, 12, 10, 8]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Hand Axe';
-        this.inventory.shield = 'Cracked Round Shield';
-        this.inventory.magic = 'Pyromancy Flame';
-        this.inventory.other = 'Fireball';
-        }); 
-    }
-}
-
-class Cleric extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [2, 11, 11, 9, 12, 8, 11, 8, 14]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Mace';
-        this.inventory.shield = 'East-West Shield';
-        this.inventory.magic = 'Canvas Talisman';
-        this.inventory.other = 'Heal';
-        }); 
-    }
-}
-
-class Deprived extends Character {
-    constructor(name, sex, gift, physique, stats, inventory){
-        super(name, sex, gift, physique, stats, inventory);
-        [6, 11, 11, 11, 11, 11, 11, 11, 11]
-        .forEach((val, i) => {
-        this[this.stats[i]] = val;
-        this.inventory.weapon = 'Club';
-        this.inventory.shield ='Plank Shield';
-        }); 
-    }
-}
-
-// let giftsOpt = ['None', 
-//                'Goddess\'s BLessing', 
-//                'Black Firebomb', 
-//                'Twin Humanities', 
-//                'Binoculars', 
-//                'Pendant', 
-//                'Master Key', 
-//                'Tiny Being\'s Ring', 
-//                'Old Witch\'s Ring'
-//                ]
-// let physiqueOpt = [ 'Thin',
-//                    'Medium',
-//                    'Heavy',
-//                    'Large Head'
-//                  ]
-// let sexOpt = ['Male', 'Female']
-
-// (function createCharacter() {
-//     rl.question('Create character? y/n  ', (answer) => {
-//         if (answer.match(/^y(es)?$/i)) {
-//             rl.question('Give your character a name:  ', (name) => {
-//                 if (answer. length != 0) {
-//                     rl.question('Choose class:  ', (type) => {
-//                         if (answer.length != 0) {
-//                             rl.question('Choose gift:  ', (gift) => {
-//                                 if (answer.length != 0) {
-//                                     rl.question('Choose physique:  ', (physique) =>{
-//                                         if(answer.length != 0) {
-//                                             rl.question('Choose sex:  ', (sex) => {
-//                                                 if (answer.length != 0) {
-//                                                     global.userChar = new (eval(type))(name, sex, gift, physique)
-//                                                     log(userChar);
-//                                                 }
-//                                             })
-//                                         }
-//                                     })
-//                                 }
-//                             })
-//                         }
-//                     })
-//                 }
-//             })
-//         }
-//         else {
-//             log()
-//         }   
-//     })
-// })()
-
-// let guy = new Deprived('bob', 'shemale', 'divine', 'tall')
+console.log(knight.stats);
+// Updated stats, only level has changed:
+// {
+//     level: 9,
+//     vitality: 14,
+//     attunement: 10,
+//     endurance: 10,
+//     strength: 11,
+//     dexterity: 11,
+//     resistance: 10,
+//     intelligence: 9,
+//     faith: 11
+// }
