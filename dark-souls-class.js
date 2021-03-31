@@ -149,7 +149,7 @@ class State {
     this.lastBonfire = lastBonfire;
     this.inventory = inventory;
   }
-  updateLevel() {
+  updateLevel(newLevel) {
     this.level = newLevel;
   }
 
