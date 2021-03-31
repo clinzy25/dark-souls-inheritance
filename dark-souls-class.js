@@ -1,18 +1,61 @@
 let log = console.log;
-/**
- * We can add methods to characters using composition
- */
 
-const lightAttack = {};
+/**
+ * We can add methods to characters using composition, need to figure out how to place on a character
+ */
+const lightAttack = (weapon) => ({
+  damage: 5 * state.inventory.longsword.multiplier,
+  lightAttack: () => log(`light attack, damage: ${damage}`),
+});
+
+/**
+ * Quick weapon class
+ */
+class Weapon {
+  constructor(name, multiplier, description) {
+    this.name = name;
+    this.multiplier = multiplier;
+    this.description = description;
+  }
+}
+
+class Shield {
+  constructor(name, multiplier, description) {
+    this.name = name;
+    this.multiplier = multiplier;
+    this.description = description;
+  }
+}
+
+const longsword = new Weapon(
+  "Longsword",
+  1.1,
+  "Widely-used standard straight sword, only matched in ubiquity by the shortsword."
+);
+
+const heaterShield = new Shield(
+  "heater Shield",
+  1,
+  "Small metal shield. A standard, widely-used shield. This shield is easy to use, and is one of the smallest shields that offers 100% physical damage reduction."
+);
 
 class Character {
-  constructor(name, sex, gift, physique, stats = {}, state = new State()) {
+  constructor(
+    name,
+    sex,
+    gift,
+    physique,
+    stats = {},
+    state = new State(),
+    attacks = {}
+  ) {
     this.name = name;
     this.sex = sex;
     this.gift = gift;
     this.physique = physique;
     this._stats = stats;
     this.state = state;
+    this.attacks = attacks;
   }
 
   /**
@@ -142,15 +185,8 @@ class Warrior extends Character {
     // Add initial inventory items.
     this.state.inventory.addItems([
       {
-        name: "Longsword",
-        type: "Weapon",
-        description:
-          "Widely-used standard straight sword, only matched in ubiquity by the shortsword.",
-      },
-      {
-        name: "Heater Shield",
-        type: "Shield",
-        description: "Small metal shield. A standard, widely-used shield.",
+        longsword,
+        heaterShield,
       },
     ]);
 
@@ -169,6 +205,9 @@ class Warrior extends Character {
   }
 }
 
+/**
+ * TESTS
+ */
 const conner = new Warrior("boah", "M", "pendant", "thin");
 conner.state.updateBonfire("Firelink");
 conner.state.updatePosition(50, -90);
@@ -179,8 +218,9 @@ conner.state.inventory.addItems({
   type: "Weapon",
   description: "Big ass club",
 });
-log(conner);
-log(conner.state.inventory);
+
+// log(conner);
+// log(conner.state.inventory);
 
 class Knight extends Character {
   constructor(name, sex, gift, physique) {
