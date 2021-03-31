@@ -4,7 +4,7 @@ let log = console.log;
  * We can add methods to characters using composition, need to figure out how to place on a character
  */
 const lightAttack = (weapon) => ({
-  damage: 5 * state.inventory.longsword.multiplier,
+  damage: 5 * weapon.multiplier,
   lightAttack: () => log(`light attack, damage: ${damage}`),
 });
 
