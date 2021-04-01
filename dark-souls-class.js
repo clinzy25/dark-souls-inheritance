@@ -57,7 +57,7 @@ Character.prototype.lightAttack = function () {
 
 Character.prototype.heavyAttack = function () {
   let damage = 3 * this.state.inventory.items[0].weapon.multiplier;
-  log(`light attack, damage: ${damage}`);
+  log(`heavy attack, damage: ${damage}`);
 };
 
 class Warrior extends Character {
@@ -422,7 +422,6 @@ class Deprived extends Character {
       vitality: 11,
       attunement: 11,
       endurance: 11,
-      type: "",
       strength: 11,
       dexterity: 11,
       resistance: 11,
@@ -444,8 +443,8 @@ conner.state.inventory.addItems({
   weapon: broadsword,
 });
 
-log(conner.lightAttack());
-log(conner.heavyAttack());
+lconner.lightAttack();
+conner.heavyAttack();
 log(conner.state.inventory);
 
 /**
