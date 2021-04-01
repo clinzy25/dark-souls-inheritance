@@ -1,61 +1,16 @@
+import { longsword, heaterShield, broadsword } from "./weapons.js";
+import State from "./state.js";
+
 let log = console.log;
 
-/**
- * We can add methods to characters using composition, need to figure out how to place on a character
- */
-const lightAttack = (weapon) => ({
-  damage: 5 * weapon.multiplier,
-  lightAttack: () => log(`light attack, damage: ${damage}`),
-});
-
-/**
- * Quick weapon class
- */
-class Weapon {
-  constructor(name, multiplier, description) {
-    this.name = name;
-    this.multiplier = multiplier;
-    this.description = description;
-  }
-}
-
-class Shield {
-  constructor(name, multiplier, description) {
-    this.name = name;
-    this.multiplier = multiplier;
-    this.description = description;
-  }
-}
-
-const longsword = new Weapon(
-  "Longsword",
-  1.1,
-  "Widely-used standard straight sword, only matched in ubiquity by the shortsword."
-);
-
-const heaterShield = new Shield(
-  "heater Shield",
-  1,
-  "Small metal shield. A standard, widely-used shield. This shield is easy to use, and is one of the smallest shields that offers 100% physical damage reduction."
-);
-
 class Character {
-  constructor(
-    name,
-    sex,
-    gift,
-    physique,
-    stats = {},
-    state = new State(),
-    attacks = {}
-  ) {
+  constructor(name, sex, gift, physique, stats = {}, state = new State()) {
     this.name = name;
     this.sex = sex;
     this.gift = gift;
     this.physique = physique;
     this._stats = stats;
     this.state = state;
-    this.attacks = attacks;
   }
 
   /**
@@ -90,105 +45,30 @@ class Character {
   get stats() {
     return this._stats;
   }
-
-  /**
-   * This is a sync state function that I'm not sure about. I think it would be called
-   * at the end of certain actions (like adding to inventory or resting at a BF) to make sure we don't accidentally
-   * make changes that don't persist. Not sure if it's necessary, and its not even working sooo...
-   * @param {object} state
-   */
-  syncState(state) {
-    for (let prop in this.state) {
-      if (!(prop in state) || !syncState(this.state[prop], state[prop])) {
-        this.state = state;
-        throw new Error("A state change was not captured");
-      }
-    }
-    return this.state;
-  }
 }
 
-class Inventory {
-  constructor(_items = []) {
-    this.items = _items;
-  }
+/**
+ * Attacks, need a module, and to be able to pass active weapon as param
+ */
+Character.prototype.lightAttack = function () {
+  let damage = 1 * this.state.inventory.items[0].weapon.multiplier;
+  log(`light attack, damage: ${damage}`);
+};
 
-  /**
-   * Add items to the inventory
-   * @param {array} items
-   * @returns {*[]}
-   */
-  addItems(items) {
-    this.items = this.items.concat(items);
-    return this.items;
-  }
-
-  /**
-   * Remove an item from the inventory
-   * @param {string} name
-   */
-  removeItem(name) {
-    this.items = this.items.filter((item) => item.name !== name);
-    return this.items;
-  }
-}
-
-class State {
-  constructor(
-    level = "Undead Asylum",
-    positionX = 0,
-    positionY = 0,
-    souls = 0,
-    lastBonfire = "",
-    inventory = new Inventory()
-  ) {
-    this.level = level;
-    this.positionX = positionX;
-    this.positionY = positionY;
-    this.souls = souls;
-    this.lastBonfire = lastBonfire;
-    this.inventory = inventory;
-  }
-  updateLevel(newLevel) {
-    this.level = newLevel;
-  }
-
-  updateBonfire(newBonfire) {
-    this.lastBonfire = newBonfire;
-  }
-
-  /**
-   * Sets position (curently arbitrary)
-   * @param {number} x
-   * @param {number} y
-   * @returns {[]}
-   */
-  updatePosition(x, y) {
-    this.positionX += x;
-    this.positionY += y;
-    return [x, y];
-  }
-
-  /**
-   * Updates soul count, supports negative numbers
-   * @param {number} numSouls
-   */
-  updateSouls(numSouls) {
-    this.souls += numSouls;
-  }
-}
+Character.prototype.heavyAttack = function () {
+  let damage = 3 * this.state.inventory.items[0].weapon.multiplier;
+  log(`light attack, damage: ${damage}`);
+};
 
 class Warrior extends Character {
   constructor(name, sex, gift, physique) {
     super(name, sex, gift, physique);
 
     // Add initial inventory items.
-    this.state.inventory.addItems([
-      {
-        longsword,
-        heaterShield,
-      },
-    ]);
+    this.state.inventory.addItems({
+      weapon: longsword,
+      shield: heaterShield,
+    });
 
     // Set initial stats using setter.
     this.stats = {
@@ -204,23 +84,6 @@ class Warrior extends Character {
     };
   }
 }
-
-/**
- * TESTS
- */
-const conner = new Warrior("boah", "M", "pendant", "thin");
-conner.state.updateBonfire("Firelink");
-conner.state.updatePosition(50, -90);
-conner.state.updatePosition(-25, 90);
-conner.state.updateSouls(100);
-conner.state.inventory.addItems({
-  name: "Giant Club",
-  type: "Weapon",
-  description: "Big ass club",
-});
-
-// log(conner);
-// log(conner.state.inventory);
 
 class Knight extends Character {
   constructor(name, sex, gift, physique) {
@@ -570,7 +433,23 @@ class Deprived extends Character {
 }
 
 /**
- * Tests
+ * TESTS 3/31/21
+ */
+const conner = new Warrior("boah", "M", "pendant", "thin");
+conner.state.updateBonfire("Firelink");
+conner.state.updatePosition(50, -90);
+conner.state.updatePosition(-25, 90);
+conner.state.updateSouls(100);
+conner.state.inventory.addItems({
+  weapon: broadsword,
+});
+
+log(conner.lightAttack());
+log(conner.heavyAttack());
+log(conner.state.inventory);
+
+/**
+ * Tests 2/21
  */
 
 // const warrior = new Warrior("Q", "Male", "Twin Humanities", "Thin");
