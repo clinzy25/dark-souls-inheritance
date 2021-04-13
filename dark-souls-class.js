@@ -1,7 +1,5 @@
-import { longsword, heaterShield, broadsword } from "./weapons.js";
-import State from "./state.js";
-
-let log = console.log;
+import { weapons, shields } from './weapons.js';
+import State from './state.js';
 
 class Character {
   constructor(name, sex, gift, physique, stats = {}, state = new State()) {
@@ -19,11 +17,11 @@ class Character {
    */
   set stats(newStats) {
     if (Object.keys(newStats).length < 1) {
-      throw new Error("Please specify at least 1 stat");
+      throw new Error('Please specify at least 1 stat');
     } else if (
-      !Object.values(newStats).every((stat) => typeof stat === "number")
+      !Object.values(newStats).every((stat) => typeof stat === 'number')
     ) {
-      throw new Error("All stat values must be type number");
+      throw new Error('All stat values must be type number');
     }
 
     for (let key in newStats) {
@@ -51,14 +49,27 @@ class Character {
  * Attacks, need a module, and to be able to pass active weapon as param
  */
 Character.prototype.lightAttack = function () {
-  let damage = 1 * this.state.inventory.items[0].weapon.multiplier;
-  log(`light attack, damage: ${damage}`);
+  let damage = (1 * this.state.inventory.items[0].weapon.multiplier).toFixed(2);
+  console.log(`light attack, damage: ${damage}`);
 };
 
 Character.prototype.heavyAttack = function () {
-  let damage = 3 * this.state.inventory.items[0].weapon.multiplier;
-  log(`heavy attack, damage: ${damage}`);
+  let damage = (3 * this.state.inventory.items[0].weapon.multiplier).toFixed(2);
+  console.log(`heavy attack, damage: ${damage}`);
 };
+
+/**
+ * OR we can use composition
+ */
+// const lightAttack = () => ({
+//   damage: (1 * this.state.inventory.items[0].weapon.multiplier).toFixed(2),
+//   attack: () => `light attack, damage: ${damage}`,
+// });
+
+// const heavyAttack = () => ({
+//   damage: (3 * this.state.inventory.items[0].weapon.multiplier).toFixed(2),
+//   attack: () => `heavy attack, damage: ${damage}`,
+// });
 
 class Warrior extends Character {
   constructor(name, sex, gift, physique) {
@@ -66,8 +77,8 @@ class Warrior extends Character {
 
     // Add initial inventory items.
     this.state.inventory.addItems({
-      weapon: longsword,
-      shield: heaterShield,
+      weapon: weapons.longsword,
+      shield: shields.heaterShield,
     });
 
     // Set initial stats using setter.
@@ -92,16 +103,16 @@ class Knight extends Character {
     // Add initial inventory items.
     this.inventory.addItems([
       {
-        name: "Broadsword",
-        type: "Weapon",
+        name: 'Broadsword',
+        type: 'Weapon',
         description:
-          "A straight sword with a broad blade designed for slashing.",
+          'A straight sword with a broad blade designed for slashing.',
       },
       {
-        name: "Tower Kite Shield",
-        type: "Shield",
+        name: 'Tower Kite Shield',
+        type: 'Shield',
         description:
-          "Medium metal shield. Decorated with a tower, the symbol of protection. A standard, widely-used shield.",
+          'Medium metal shield. Decorated with a tower, the symbol of protection. A standard, widely-used shield.',
       },
     ]);
 
@@ -126,16 +137,16 @@ class Wanderer extends Character {
 
     this.inventory.addItems([
       {
-        name: "Scimitar",
-        type: "Weapon",
+        name: 'Scimitar',
+        type: 'Weapon',
         description:
           "Small, curved sword. Each hit inflicts little damage, but fluid chain attacks are deadly. The scimitar's sharp slashing attacks are effective against cloth and flesh, but not against metal armor or tough scales.",
       },
       {
-        name: "Leather Shield",
-        type: "Shield",
+        name: 'Leather Shield',
+        type: 'Shield',
         description:
-          "Round leather-covered shield. A standard, widely-used shield. Small shields are always less stable, but landing critical hits after parry is easier.",
+          'Round leather-covered shield. A standard, widely-used shield. Small shields are always less stable, but landing critical hits after parry is easier.',
       },
     ]);
 
@@ -160,15 +171,15 @@ class Thief extends Character {
     this.inventory.addItems([
       {
         name: "Bandit's Knife",
-        type: "Weapon",
+        type: 'Weapon',
         description:
-          "This wide single-edged shortsword is the favorite of lowly thieves and bandits. Primarily a slicing weapon, but highly effective when used for critical hits, such as after parrying or from behind.",
+          'This wide single-edged shortsword is the favorite of lowly thieves and bandits. Primarily a slicing weapon, but highly effective when used for critical hits, such as after parrying or from behind.',
       },
       {
-        name: "Target Shield",
-        type: "Shield",
+        name: 'Target Shield',
+        type: 'Shield',
         description:
-          "Small round metal shield. Four protrusions used to parry attacks. Small shields are always less stable, but landing critical hits after parry is easier. This shield is specialized for parrying.",
+          'Small round metal shield. Four protrusions used to parry attacks. Small shields are always less stable, but landing critical hits after parry is easier. This shield is specialized for parrying.',
       },
     ]);
 
@@ -192,16 +203,16 @@ class Bandit extends Character {
 
     this.inventory.addItems([
       {
-        name: "Battle Axe",
-        type: "Weapon",
+        name: 'Battle Axe',
+        type: 'Weapon',
         description:
-          "Standard battle axe. Inflicts regular damage, making it effective in various situations. Powerful attack due to its weight, but one wrong swing leaves the wielder wide open, so timing and proximity to the enemy must be judged carefully.",
+          'Standard battle axe. Inflicts regular damage, making it effective in various situations. Powerful attack due to its weight, but one wrong swing leaves the wielder wide open, so timing and proximity to the enemy must be judged carefully.',
       },
       {
-        name: "Spider Shield",
-        type: "Shield",
+        name: 'Spider Shield',
+        type: 'Shield',
         description:
-          "Shield of the savage mountain bandits. Uniquely-shaped with a large black spider etched upon it. Has resistance to poison.",
+          'Shield of the savage mountain bandits. Uniquely-shaped with a large black spider etched upon it. Has resistance to poison.',
       },
     ]);
 
@@ -225,27 +236,27 @@ class Hunter extends Character {
 
     this.inventory.addItems([
       {
-        name: "Shortsword",
-        type: "Weapon",
+        name: 'Shortsword',
+        type: 'Weapon',
         description:
-          "This small straight sword is widely used, to an extent only matched by the longsword. An accessible sword which inflicts consistent regular damage and high slash damage, making it applicable to a variety of situations.",
+          'This small straight sword is widely used, to an extent only matched by the longsword. An accessible sword which inflicts consistent regular damage and high slash damage, making it applicable to a variety of situations.',
       },
       {
-        name: "Short Bow",
-        type: "Ranged Weapon",
+        name: 'Short Bow',
+        type: 'Ranged Weapon',
         description:
-          "Small bow. Standard projectile weapon. Equip arrows to use. Hold bow and press L1 or LB to aim. Aim. for heads of humanoid foes. Press L2/R2 or LT/R/T to change type of arrows. The Short Bow is the standard bow and very useful for luring things. This bow has both a lighter weight and a faster shooting speed than a longbow.",
+          'Small bow. Standard projectile weapon. Equip arrows to use. Hold bow and press L1 or LB to aim. Aim. for heads of humanoid foes. Press L2/R2 or LT/R/T to change type of arrows. The Short Bow is the standard bow and very useful for luring things. This bow has both a lighter weight and a faster shooting speed than a longbow.',
       },
       {
-        name: "Large Leather Shield",
-        type: "Shield",
+        name: 'Large Leather Shield',
+        type: 'Shield',
         description:
-          "Large, leather-covered round shield. Choice shield for hunters. Wood shields are lighter than metal shields, but with lower physical damage reductions, and reduced shield stability.",
+          'Large, leather-covered round shield. Choice shield for hunters. Wood shields are lighter than metal shields, but with lower physical damage reductions, and reduced shield stability.',
       },
       {
-        name: "Standard Arrow x30",
-        type: "Ammunition",
-        description: "Standard Arrow. Arrow must be equipped to be fired.",
+        name: 'Standard Arrow x30',
+        type: 'Ammunition',
+        description: 'Standard Arrow. Arrow must be equipped to be fired.',
       },
     ]);
 
@@ -269,28 +280,28 @@ class Sorcerer extends Character {
 
     this.inventory.addItems([
       {
-        name: "Dagger",
-        type: "Weapon",
+        name: 'Dagger',
+        type: 'Weapon',
         description:
-          "This standard small dagger has only a modest attack but can be jabbed in rapid succession, and is effective in critical hits such as after a parry or when stabbing in the back. With both slash and thrust attacks this dagger is useful in various situations.",
+          'This standard small dagger has only a modest attack but can be jabbed in rapid succession, and is effective in critical hits such as after a parry or when stabbing in the back. With both slash and thrust attacks this dagger is useful in various situations.',
       },
       {
-        name: "Small Leather Shield",
-        type: "Shield",
+        name: 'Small Leather Shield',
+        type: 'Shield',
         description:
-          "Small, leather-covered round shield, reinforced in critical spots with metal. Small shields are always less stable, but landing critical hits after parry is easier.",
+          'Small, leather-covered round shield, reinforced in critical spots with metal. Small shields are always less stable, but landing critical hits after parry is easier.',
       },
       {
         name: "Scorcerer's Catylist",
-        type: "Catalyst",
+        type: 'Catalyst',
         description:
-          "Sorcery catalyst used by sorcerers of Vinheim Dragon School. Equip catalyst to use sorceries. Attune sorceries from a scroll at a bonfire. Most sorceries have limited number of uses.",
+          'Sorcery catalyst used by sorcerers of Vinheim Dragon School. Equip catalyst to use sorceries. Attune sorceries from a scroll at a bonfire. Most sorceries have limited number of uses.',
       },
       {
-        name: "Soul Arrow",
-        type: "Spell",
+        name: 'Soul Arrow',
+        type: 'Spell',
         description:
-          "Elementary sorcery. Fire a soul arrow. Soul arrows inflict magic damage, making them effective against iron armor, tough scales, and other physically resilient materials.",
+          'Elementary sorcery. Fire a soul arrow. Soul arrows inflict magic damage, making them effective against iron armor, tough scales, and other physically resilient materials.',
       },
     ]);
 
@@ -314,28 +325,28 @@ class Pyromancer extends Character {
 
     this.inventory.addItems([
       {
-        name: "Hand Axe",
-        type: "Weapon",
+        name: 'Hand Axe',
+        type: 'Weapon',
         description:
           "Small hand axe. Appears identical to a lumberjack's tool, but has an ideal weight and strength, and is easy to handle. One wrong swing leaves the wielder wide open, so timing and proximity to the enemy must be judged carefully.",
       },
       {
-        name: "Cracked Round Shield",
-        type: "Shield",
+        name: 'Cracked Round Shield',
+        type: 'Shield',
         description:
-          "Round wooden shield. Cracked and nearly broken. Wood shields are lighter than metal shields, but this one has lower physical damage reduction stability, partly due to cracking.",
+          'Round wooden shield. Cracked and nearly broken. Wood shields are lighter than metal shields, but this one has lower physical damage reduction stability, partly due to cracking.',
       },
       {
-        name: "Pyromancy Flame",
-        type: "Catalyst",
+        name: 'Pyromancy Flame',
+        type: 'Catalyst',
         description:
-          "Flame medium used by Great Swamp pyromancers. Pyromancers arouse this flame to produce various fire arts. Equip pyromancer flame to produce pyromancy. Attune pyromancies from a scroll at bonfire. Most pyromancies have limited number of uses.",
+          'Flame medium used by Great Swamp pyromancers. Pyromancers arouse this flame to produce various fire arts. Equip pyromancer flame to produce pyromancy. Attune pyromancies from a scroll at bonfire. Most pyromancies have limited number of uses.',
       },
       {
-        name: "Fireball",
-        type: "Pyromancy",
+        name: 'Fireball',
+        type: 'Pyromancy',
         description:
-          "Standard pyromancy of the Great Swamp. Hurl fireball. The fire damage caused by fireballs makes them effective against corporeal beasts and Undead, who by nature fear flame.",
+          'Standard pyromancy of the Great Swamp. Hurl fireball. The fire damage caused by fireballs makes them effective against corporeal beasts and Undead, who by nature fear flame.',
       },
     ]);
 
@@ -359,28 +370,28 @@ class Cleric extends Character {
 
     this.inventory.addItems([
       {
-        name: "Mace",
-        type: "Weapon",
+        name: 'Mace',
+        type: 'Weapon',
         description:
-          "Iron hammer with a protrusive pommel. This simple bladeless strike weapon is effective against most foes, and can break the guard of a shield. However, one miss leaves one wide open.",
+          'Iron hammer with a protrusive pommel. This simple bladeless strike weapon is effective against most foes, and can break the guard of a shield. However, one miss leaves one wide open.',
       },
       {
-        name: "East-West Shield",
-        type: "Shield",
+        name: 'East-West Shield',
+        type: 'Shield',
         description:
-          "A wooden kite shaped shield. It is decorated with the ancient symbol of a double-headed eagle, painted yellow. Wooden shields are lighter than metal shields, but with lower physical damage reduction, and reduced shield stability.",
+          'A wooden kite shaped shield. It is decorated with the ancient symbol of a double-headed eagle, painted yellow. Wooden shields are lighter than metal shields, but with lower physical damage reduction, and reduced shield stability.',
       },
       {
-        name: "Canvas Talisman",
-        type: "Talisman",
+        name: 'Canvas Talisman',
+        type: 'Talisman',
         description:
-          "Medium for casting miracles of the Gods. Canvas Talisman is for clerics on a pilgrimage. Equip talisman to cast miracles. Attune miracles from a scroll at a bonfire. Most miracles have limited number of uses.",
+          'Medium for casting miracles of the Gods. Canvas Talisman is for clerics on a pilgrimage. Equip talisman to cast miracles. Attune miracles from a scroll at a bonfire. Most miracles have limited number of uses.',
       },
       {
-        name: "Heal",
-        type: "Miracle",
+        name: 'Heal',
+        type: 'Miracle',
         description:
-          "Elementary miracle cast by clerics. Restores HP. To cast a miracle, the caster learns a tale of the Gods, and says a prayer to be blessed by its revelations. Heal is the shortest of such miraculous tales.",
+          'Elementary miracle cast by clerics. Restores HP. To cast a miracle, the caster learns a tale of the Gods, and says a prayer to be blessed by its revelations. Heal is the shortest of such miraculous tales.',
       },
     ]);
 
@@ -404,16 +415,16 @@ class Deprived extends Character {
 
     this.inventory.addItems([
       {
-        name: "Club",
-        type: "Weapon",
+        name: 'Club',
+        type: 'Weapon',
         description:
-          "A simple wooden club. This simple bladeless strike weapon is effective against most foes, is easily handled, and can break the guard of a shield. However, a single miss makes one wide open, so timing and proximities are crucial.",
+          'A simple wooden club. This simple bladeless strike weapon is effective against most foes, is easily handled, and can break the guard of a shield. However, a single miss makes one wide open, so timing and proximities are crucial.',
       },
       {
-        name: "Plank Shield",
-        type: "Shield",
+        name: 'Plank Shield',
+        type: 'Shield',
         description:
-          "Makeshift shield built from wood planks. Provides minimal protection, but at a cost of moderate humiliation.",
+          'Makeshift shield built from wood planks. Provides minimal protection, but at a cost of moderate humiliation.',
       },
     ]);
 
@@ -434,18 +445,18 @@ class Deprived extends Character {
 /**
  * TESTS 3/31/21
  */
-const conner = new Warrior("boah", "M", "pendant", "thin");
-conner.state.updateBonfire("Firelink");
+const conner = new Warrior('boah', 'M', 'pendant', 'thin');
+conner.state.updateBonfire('Firelink');
 conner.state.updatePosition(50, -90);
 conner.state.updatePosition(-25, 90);
 conner.state.updateSouls(100);
 conner.state.inventory.addItems({
-  weapon: broadsword,
+  weapon: weapons.broadsword,
 });
 
-lconner.lightAttack();
+conner.lightAttack();
 conner.heavyAttack();
-log(conner.state.inventory);
+console.log(conner.state.inventory);
 
 /**
  * Tests 2/21
